@@ -1,0 +1,873 @@
+/* =========================================================================
+   ДИЗАЙН-СИСТЕМА
+   Палитра вдохновлена фотографией: тёплое дерево, цветочные занавески,
+   мягкий дневной свет, приглушённый синий жилет. Чувство тихой комнаты.
+   ========================================================================= */
+:root {
+  /* Цвета */
+  --paper:        #F5EFE3;   /* фон — старая бумага */
+  --paper-warm:   #EFE6D4;   /* секционный фон */
+  --ink:          #2C2520;   /* основной текст */
+  --ink-soft:     #5A4F46;   /* приглушённый текст */
+  --ink-faint:    #8A7E72;   /* совсем тихий текст */
+  --wine:         #7B2D26;   /* акцент — бордовая обложка */
+  --wine-deep:    #5C1F1A;   /* акцент — затемнённый */
+  --rose:         #C9978F;   /* пыльная роза с занавесок */
+  --teal:         #4D6A73;   /* приглушённый сине-зелёный — жилет */
+  --gold:         #B58B5A;   /* тёплое дерево */
+  --line:         #D9CDB7;   /* линии разделителей */
+
+  /* Шрифты */
+  --serif-display: "Cormorant Garamond", "Times New Roman", serif;
+  --serif-body:    "Lora", Georgia, serif;
+
+  /* Размеры */
+  --container: 1180px;
+  --container-narrow: 880px;
+  --radius: 2px;
+}
+
+/* ===== СБРОС ===== */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--serif-body);
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--ink);
+  background: var(--paper);
+  /* Тонкая зернистая текстура бумаги */
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(123, 45, 38, 0.025) 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(77, 106, 115, 0.02) 0%, transparent 50%);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img { max-width: 100%; display: block; }
+button { font: inherit; cursor: pointer; border: 0; background: 0; color: inherit; }
+a { color: var(--wine); text-decoration: none; }
+a:hover { color: var(--wine-deep); }
+
+/* ===== ДЕКОРАТИВНЫЙ ВЕРХНИЙ БОРДЮР ===== */
+.ornament-top {
+  height: 6px;
+  background:
+    linear-gradient(to right,
+      var(--wine) 0%, var(--wine) 40%,
+      var(--gold) 40%, var(--gold) 60%,
+      var(--wine) 60%, var(--wine) 100%);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+/* ===== ОБЩИЕ ЭЛЕМЕНТЫ ===== */
+.kicker, .section-kicker {
+  font-family: var(--serif-body);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--wine);
+  margin: 0 0 1.5rem;
+}
+
+.section-kicker::before {
+  content: "✦";
+  margin-right: 0.6em;
+  color: var(--gold);
+  letter-spacing: 0;
+}
+
+.section-title {
+  font-family: var(--serif-display);
+  font-weight: 500;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.15;
+  margin: 0 0 3rem;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+/* ===== HERO ===== */
+.hero {
+  padding-block: 4rem 5rem;
+  padding-inline: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Декоративный фоновый узор */
+.hero::before {
+  content: "";
+  position: absolute;
+  top: -100px;
+  right: -100px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(201, 151, 143, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero__inner {
+  max-width: var(--container);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: 5rem;
+  align-items: center;
+  position: relative;
+}
+
+.hero__photo {
+  margin: 0;
+  position: relative;
+  animation: fadeInUp 1.2s ease-out both;
+}
+
+.hero__photo-frame {
+  position: relative;
+  background: white;
+  padding: 18px 18px 60px;
+  box-shadow:
+    0 1px 2px rgba(44, 37, 32, 0.08),
+    0 8px 24px rgba(44, 37, 32, 0.12),
+    0 24px 60px rgba(44, 37, 32, 0.10);
+  transform: rotate(-1.2deg);
+  transition: transform 0.5s ease;
+}
+.hero__photo-frame::before {
+  /* «скотч» сверху */
+  content: "";
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  width: 110px;
+  height: 32px;
+  background: rgba(201, 151, 143, 0.45);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+}
+.hero__photo-frame:hover { transform: rotate(0deg) scale(1.02); }
+.hero__photo-frame img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  filter: saturate(0.95);
+}
+.hero__photo figcaption {
+  position: absolute;
+  bottom: 12px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-family: var(--serif-display);
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--ink-soft);
+  letter-spacing: 0.02em;
+}
+
+.hero__intro { animation: fadeInUp 1.4s ease-out 0.15s both; }
+
+.hero__title {
+  font-family: var(--serif-display);
+  font-weight: 500;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  line-height: 1.05;
+  margin: 0 0 2rem;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+}
+.hero__title-italic {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--wine);
+  margin-left: 1.5em;
+}
+.hero__title span:last-child { margin-left: 3em; }
+
+.hero__lead {
+  font-size: 1.15rem;
+  line-height: 1.75;
+  color: var(--ink-soft);
+  max-width: 520px;
+  margin: 0 0 2.5rem;
+}
+
+.hero__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8em;
+  padding: 0.9rem 1.8rem;
+  background: var(--wine);
+  color: var(--paper);
+  font-family: var(--serif-body);
+  font-weight: 500;
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  border-radius: var(--radius);
+  transition: all 0.3s ease;
+  position: relative;
+}
+.hero__cta:hover {
+  background: var(--wine-deep);
+  color: var(--paper);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(123, 45, 38, 0.25);
+}
+.hero__cta svg { transition: transform 0.3s ease; }
+.hero__cta:hover svg { transform: translateX(4px); }
+
+/* ===== ОБ АВТОРЕ ===== */
+.about {
+  background: var(--paper-warm);
+  padding-block: 6rem;
+  padding-inline: 1.5rem;
+  position: relative;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.about__inner {
+  max-width: var(--container);
+  margin: 0 auto;
+}
+
+.about__columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 5rem;
+  align-items: start;
+}
+
+.about__text p {
+  font-size: 1.1rem;
+  line-height: 1.85;
+  color: var(--ink);
+  margin: 0 0 1.5em;
+}
+.about__text p:first-child::first-letter {
+  font-family: var(--serif-display);
+  font-size: 4.5em;
+  font-weight: 500;
+  float: left;
+  line-height: 0.85;
+  margin: 0.1em 0.12em 0 0;
+  color: var(--wine);
+}
+.about__signoff {
+  font-family: var(--serif-display);
+  font-style: italic;
+  color: var(--ink-soft);
+  font-size: 1.2rem !important;
+}
+
+.about__stats {
+  background: var(--paper);
+  padding: 2.5rem 2rem;
+  border: 1px solid var(--line);
+  position: relative;
+}
+.about__stats::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1px solid var(--line);
+  pointer-events: none;
+}
+
+.stat {
+  display: flex;
+  align-items: baseline;
+  gap: 1.2rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.stat:last-of-type { border-bottom: 0; }
+.stat__num {
+  font-family: var(--serif-display);
+  font-size: 2.5rem;
+  font-weight: 500;
+  color: var(--wine);
+  line-height: 1;
+  flex-shrink: 0;
+  min-width: 80px;
+}
+.stat__label {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+}
+
+.about__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 2px;
+  transition: gap 0.3s ease;
+}
+.about__link:hover { gap: 0.8em; }
+
+/* ===== СТИХИ — СЕКЦИЯ ===== */
+.poems-section {
+  padding-block: 6rem 8rem;
+  padding-inline: 1.5rem;
+}
+
+.poems-section__inner {
+  max-width: var(--container);
+  margin: 0 auto;
+}
+
+/* ===== ФИЛЬТРЫ ===== */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0 0 3.5rem;
+  padding: 0 0 1.5rem;
+  border-bottom: 1px solid var(--line);
+}
+.filter {
+  padding: 0.7rem 1.3rem;
+  font-family: var(--serif-body);
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+  border-radius: var(--radius);
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  position: relative;
+}
+.filter:hover { color: var(--ink); background: rgba(217, 205, 183, 0.4); }
+.filter.is-active {
+  background: var(--ink);
+  color: var(--paper);
+}
+.filter.is-active:hover { background: var(--ink); color: var(--paper); }
+.filter__count {
+  font-size: 0.75rem;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+.filter.is-active .filter__count { color: rgba(245, 239, 227, 0.7); }
+
+/* ===== СЕТКА СТИХОВ ===== */
+.poems-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.poem-card {
+  position: relative;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  padding: 2rem 1.8rem 1.6rem;
+  text-align: left;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+  overflow: hidden;
+}
+.poem-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 0;
+  background: var(--wine);
+  transition: height 0.4s ease;
+}
+.poem-card:hover {
+  border-color: var(--ink-soft);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(44, 37, 32, 0.08);
+}
+.poem-card:hover::before { height: 100%; }
+
+.poem-card__category {
+  font-family: var(--serif-body);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin: 0 0 1rem;
+  color: var(--teal);
+}
+.poem-card__category[data-cat="civic"]      { color: var(--wine); }
+.poem-card__category[data-cat="love"]       { color: var(--rose); filter: brightness(0.85); }
+.poem-card__category[data-cat="philosophy"] { color: var(--teal); }
+.poem-card__category[data-cat="other"]      { color: var(--gold); }
+
+.poem-card__title {
+  font-family: var(--serif-display);
+  font-size: 1.65rem;
+  font-weight: 500;
+  line-height: 1.2;
+  margin: 0 0 auto;
+  color: var(--ink);
+  letter-spacing: -0.005em;
+}
+
+.poem-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--line);
+}
+.poem-card__date {
+  font-size: 0.82rem;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+.poem-card__arrow {
+  color: var(--wine);
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+.poem-card:hover .poem-card__arrow { transform: translateX(4px); }
+
+.poems-empty {
+  text-align: center;
+  font-family: var(--serif-display);
+  font-style: italic;
+  font-size: 1.4rem;
+  color: var(--ink-faint);
+  padding: 4rem 0;
+}
+
+/* ===== МОДАЛЬНОЕ ОКНО ===== */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  animation: fadeIn 0.25s ease-out;
+}
+.modal[hidden] { display: none; }
+
+.modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(28, 24, 20, 0.55);
+  backdrop-filter: blur(4px);
+}
+
+.modal__content {
+  position: relative;
+  background: var(--paper);
+  max-width: 720px;
+  width: 100%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  padding: 3.5rem 3rem 3rem;
+  border: 1px solid var(--line);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.3);
+  animation: slideUp 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.modal__content::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1px solid var(--line);
+  pointer-events: none;
+}
+
+/* Прокручиваемая область внутри рамки */
+.modal__scroll {
+  overflow-y: auto;
+  flex: 1 1 auto;
+  min-height: 0; /* критично для скролла внутри flex-контейнера */
+  /* Небольшой отступ справа, чтобы скроллбар не залезал на текст */
+  margin-right: -0.5rem;
+  padding-right: 0.5rem;
+}
+
+.modal__close {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.2rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-soft);
+  transition: all 0.2s ease;
+  z-index: 1;
+}
+.modal__close:hover {
+  background: var(--ink);
+  color: var(--paper);
+  transform: rotate(90deg);
+}
+
+.modal__category {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--wine);
+  margin: 0 0 1rem;
+}
+
+.modal__title {
+  font-family: var(--serif-display);
+  font-size: 2.4rem;
+  font-weight: 500;
+  line-height: 1.15;
+  margin: 0 0 0.5rem;
+  color: var(--ink);
+}
+
+.modal__date {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.05em;
+  margin: 0 0 2.5rem;
+}
+
+.modal__text {
+  font-family: var(--serif-body);
+  font-size: 1.1rem;
+  line-height: 1.85;
+  color: var(--ink);
+  white-space: pre-wrap;
+  margin: 0 0 2rem;
+  font-variant-ligatures: common-ligatures;
+}
+.modal__text:empty { display: none; }
+
+.modal__placeholder {
+  background: var(--paper-warm);
+  border-left: 3px solid var(--rose);
+  padding: 1.2rem 1.5rem;
+  margin: 0 0 2rem;
+}
+.modal__placeholder p {
+  margin: 0;
+  font-style: italic;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.modal__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.7rem 1.4rem;
+  background: transparent;
+  color: var(--wine);
+  border: 1px solid var(--wine);
+  font-family: var(--serif-body);
+  font-weight: 500;
+  font-size: 0.9rem;
+  letter-spacing: 0.03em;
+  transition: all 0.25s ease;
+}
+.modal__link:hover {
+  background: var(--wine);
+  color: var(--paper);
+}
+
+/* ===== ПОДВАЛ ===== */
+.footer {
+  background: var(--ink);
+  color: var(--paper);
+  padding-block: 5rem 3rem;
+  padding-inline: 1.5rem;
+  text-align: center;
+}
+.footer__inner {
+  max-width: 600px;
+  margin: 0 auto;
+}
+.footer__ornament {
+  font-size: 1.4rem;
+  color: var(--gold);
+  margin: 0 0 1.5rem;
+  letter-spacing: 1em;
+  padding-left: 1em;
+}
+.footer__quote {
+  font-family: var(--serif-display);
+  font-style: italic;
+  font-size: 1.5rem;
+  line-height: 1.4;
+  color: var(--paper);
+  margin: 0 0 2.5rem;
+  font-weight: 400;
+}
+.footer__meta {
+  font-size: 0.9rem;
+  color: rgba(245, 239, 227, 0.65);
+  line-height: 1.7;
+  margin: 0 0 2rem;
+}
+.footer__meta a {
+  color: var(--rose);
+  border-bottom: 1px solid rgba(201, 151, 143, 0.4);
+}
+.footer__meta a:hover {
+  color: var(--paper);
+  border-bottom-color: var(--paper);
+}
+.footer__copy {
+  font-size: 0.8rem;
+  color: rgba(245, 239, 227, 0.4);
+  letter-spacing: 0.1em;
+  margin: 0;
+}
+
+/* ===== АНИМАЦИИ ===== */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.poem-card {
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+/* ===== АДАПТИВ =====
+   Стратегия breakpoints:
+   ≥1440px — большие десктопы (контент центрирован, не растягивается)
+   1024–1440px — десктоп / большие планшеты (базовая раскладка)
+   768–1024px — планшеты (адаптируется сетка, отступы)
+   480–768px — планшеты в портретной / большие телефоны
+   320–480px — телефоны
+   ≤320px — очень маленькие экраны (старые телефоны, складные)
+*/
+
+/* Большие экраны: ограничиваем максимальную ширину контейнеров */
+@media (min-width: 1440px) {
+  :root { --container: 1240px; }
+  body { font-size: 18px; }
+}
+
+/* Планшеты в альбомной ориентации и небольшие ноутбуки */
+@media (max-width: 1100px) {
+  .hero__inner { gap: 3.5rem; }
+  .about__columns { gap: 3.5rem; }
+}
+
+/* Планшеты в портретной ориентации */
+@media (max-width: 900px) {
+  .hero { padding: 3rem 1.25rem 4rem; }
+  .hero__inner {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    text-align: center;
+  }
+  .hero__photo { max-width: 320px; margin: 0 auto; }
+  .hero__title span,
+  .hero__title span:last-child { margin-left: 0; }
+  .hero__title { align-items: center; }
+  .hero__lead { margin-left: auto; margin-right: auto; }
+
+  .about { padding: 4rem 1.25rem; }
+  .about__columns {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .poems-section { padding: 4rem 1.25rem 5rem; }
+
+  .modal__content { padding: 3rem 1.5rem 2rem; }
+  .modal__title { font-size: 1.8rem; }
+}
+
+/* Большие телефоны и маленькие планшеты в портретной ориентации */
+@media (max-width: 640px) {
+  .hero { padding: 2.5rem 1rem 3.5rem; }
+  .hero__photo { max-width: 280px; }
+  .hero__lead { font-size: 1.05rem; }
+
+  .about { padding: 3.5rem 1rem; }
+  .about__text p { font-size: 1.02rem; line-height: 1.75; }
+  .about__text p:first-child::first-letter { font-size: 4em; }
+
+  .poems-section { padding: 3rem 1rem 4rem; }
+}
+
+/* Телефоны */
+@media (max-width: 560px) {
+  .hero__photo-frame { padding: 12px 12px 50px; transform: rotate(-1deg); }
+  .hero__photo figcaption { font-size: 0.95rem; bottom: 10px; }
+
+  /* Тач-цели минимум 44px для пальца (Apple HIG / Google Material) */
+  .hero__cta { padding: 0.95rem 1.6rem; min-height: 44px; }
+  .filter { padding: 0.7rem 1.1rem; min-height: 44px; font-size: 0.88rem; }
+  .about__link { min-height: 44px; padding: 0.5rem 0; }
+
+  .filters {
+    padding-bottom: 1rem;
+    /* Горизонтальный скролл для фильтров, если не помещаются */
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .filters::-webkit-scrollbar { display: none; }
+  .filter { flex-shrink: 0; }
+
+  .poems-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .poem-card { padding: 1.6rem 1.4rem 1.3rem; min-height: 160px; }
+  .poem-card__title { font-size: 1.4rem; }
+
+  .stat__num { font-size: 2rem; min-width: 65px; }
+  .about__stats { padding: 1.8rem 1.4rem; }
+
+  /* Модалка на телефоне — на весь экран для удобства чтения */
+  .modal { padding: 0; }
+  .modal__content {
+    max-height: 100vh;
+    max-height: 100dvh; /* Учёт адресной строки на iOS */
+    height: 100vh;
+    height: 100dvh;
+    border: 0;
+    padding: 4rem 1.25rem 2rem;
+  }
+  .modal__content::before { display: none; }
+  .modal__close {
+    width: 44px;
+    height: 44px;
+    background: var(--paper-warm);
+  }
+  .modal__title { font-size: 1.6rem; }
+  .modal__text { font-size: 1.05rem; }
+  .modal__link { width: 100%; justify-content: center; min-height: 48px; }
+
+  .footer { padding: 4rem 1rem 2.5rem; }
+  .footer__quote { font-size: 1.25rem; }
+}
+
+/* Очень маленькие экраны (старые iPhone SE, складные смартфоны в свёрнутом виде) */
+@media (max-width: 360px) {
+  body { font-size: 16px; }
+  .hero__photo { max-width: 240px; }
+  .hero__lead { font-size: 1rem; }
+  .poem-card { padding: 1.4rem 1.2rem 1.1rem; }
+  .poem-card__title { font-size: 1.25rem; }
+  .modal__content { padding: 3.5rem 1rem 1.5rem; }
+  .modal__title { font-size: 1.4rem; }
+  .stat { gap: 0.8rem; }
+  .stat__num { font-size: 1.7rem; min-width: 55px; }
+}
+
+/* Телефон в альбомной ориентации (landscape) — невысокий экран */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero {
+    padding: 2rem 1.25rem;
+    min-height: auto;
+  }
+  .hero__inner {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: 2rem;
+    text-align: left;
+  }
+  .hero__photo { max-width: 180px; margin: 0; }
+  .hero__title { font-size: 2.2rem; align-items: flex-start; }
+  .hero__lead { margin: 0 0 1.5rem; }
+
+  .modal__content {
+    max-height: 95vh;
+    max-height: 95dvh;
+    padding: 2.5rem 2rem 1.5rem;
+  }
+}
+
+/* Безопасные зоны для устройств с «чёлкой» (iPhone X+, и т.п.) */
+@supports (padding: max(0px)) {
+  .hero, .about, .poems-section, .footer {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+  .ornament-top {
+    padding-top: env(safe-area-inset-top);
+    height: calc(6px + env(safe-area-inset-top));
+  }
+}
+
+/* Поддержка тёмной системной темы устройства — мягкое затемнение */
+@media (prefers-color-scheme: dark) {
+  /* Оставляем светлую тему сайта, т.к. это литературный сборник —
+     но можно раскомментировать для тёмного варианта:
+  :root {
+    --paper: #1F1B17;
+    --paper-warm: #2A2521;
+    --ink: #E8DFCF;
+    --ink-soft: #B8AC9A;
+    --ink-faint: #807464;
+    --line: #3D352E;
+  }
+  */
+}
+
+/* Уважение к настройке «уменьшить движение» — для людей с вестибулярной чувствительностью */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .hero__photo-frame { transform: none; }
+  .hero__photo-frame:hover { transform: none; }
+}
+
+/* Поддержка устройств с тонким экраном на повороте (focus visible) */
+@media (hover: none) and (pointer: coarse) {
+  /* Тач-устройства: убираем hover-эффекты, которые «залипают» */
+  .poem-card:hover { transform: none; box-shadow: none; }
+  .poem-card:active {
+    transform: scale(0.98);
+    box-shadow: 0 4px 12px rgba(44, 37, 32, 0.1);
+  }
+  .hero__cta:hover { transform: none; }
+}
+
+/* Печать сайта (если кто-то захочет распечатать стихи) */
+@media print {
+  .ornament-top, .hero__cta, .filters, .modal, .footer { display: none; }
+  body { background: white; color: black; font-size: 12pt; }
+  .hero, .about, .poems-section { padding: 1rem 0; }
+  .poem-card { break-inside: avoid; border: 1px solid #ccc; }
+}
