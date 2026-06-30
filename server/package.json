@@ -1,0 +1,17 @@
+{
+  "name": "stihi-i-vremya-admin",
+  "version": "1.0.0",
+  "description": "Админка для сайта stihi-i-vremya.ru",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "bcryptjs": "^2.4.3",
+    "express-rate-limit": "^7.5.0",
+    "csrf-csrf": "^3.0.6",
+    "cookie-parser": "^1.4.7"
+  }
+}

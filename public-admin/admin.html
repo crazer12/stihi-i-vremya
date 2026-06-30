@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Редактор · stihi-i-vremya.ru</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Lora:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/redaktor-assets/admin.css" />
+</head>
+<body>
+
+<!-- ───── Экран логина ───── -->
+<div class="screen" id="screen-login">
+  <form class="login-card" id="login-form" autocomplete="off">
+    <h1 class="login-title">Редактор</h1>
+    <p class="login-sub">stihi-i-vremya.ru</p>
+
+    <label class="field">
+      <span class="field__label">Пароль</span>
+      <input type="password" id="login-password" autocomplete="current-password" required autofocus />
+    </label>
+
+    <button type="submit" class="btn btn--primary" id="login-btn">Войти</button>
+    <p class="error" id="login-error" hidden></p>
+  </form>
+</div>
+
+<!-- ───── Экран редактора ───── -->
+<div class="screen" id="screen-editor" hidden>
+  <header class="topbar">
+    <div class="topbar__left">
+      <h1 class="topbar__title">Редактор стихов</h1>
+      <a class="topbar__link" href="/" target="_blank">Открыть сайт →</a>
+    </div>
+    <div class="topbar__right">
+      <span class="topbar__counter" id="poem-counter">—</span>
+      <button class="btn btn--ghost" id="logout-btn">Выйти</button>
+    </div>
+  </header>
+
+  <main class="editor">
+    <!-- Левая колонка: список стихов -->
+    <aside class="sidebar">
+      <div class="sidebar__toolbar">
+        <button class="btn btn--primary btn--block" id="new-poem-btn">+ Новый стих</button>
+        <input type="search" id="search-input" placeholder="Поиск по названию или тексту…" />
+        <select id="filter-category">
+          <option value="">Все категории</option>
+        </select>
+      </div>
+      <div class="poem-list" id="poem-list">
+        <p class="empty-state">Загрузка…</p>
+      </div>
+    </aside>
+
+    <!-- Правая колонка: форма редактирования -->
+    <section class="form-area" id="form-area">
+      <div class="empty-state empty-state--big" id="form-empty">
+        Выберите стих слева или создайте новый.
+      </div>
+
+      <form class="poem-form" id="poem-form" hidden autocomplete="off">
+        <input type="hidden" id="poem-id" />
+
+        <label class="field">
+          <span class="field__label">Название</span>
+          <input type="text" id="field-title" maxlength="300" required />
+        </label>
+
+        <div class="field-row">
+          <label class="field">
+            <span class="field__label">Дата (ДД.ММ.ГГГГ)</span>
+            <input type="text" id="field-date" pattern="\d{2}\.\d{2}\.\d{4}" placeholder="01.01.2026" required />
+          </label>
+          <label class="field">
+            <span class="field__label">Категория</span>
+            <select id="field-category" required></select>
+          </label>
+        </div>
+
+        <label class="field">
+          <span class="field__label">Ссылка на Стихи.ру (необязательно)</span>
+          <input type="url" id="field-url" maxlength="500" placeholder="https://stihi.ru/2026/…" />
+        </label>
+
+        <label class="field">
+          <span class="field__label">Текст стихотворения</span>
+          <textarea id="field-text" rows="18" maxlength="50000" placeholder="Каждая строка стихотворения — на новой строке."></textarea>
+          <span class="field__hint" id="char-counter">0 символов</span>
+        </label>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn--primary" id="save-btn">Сохранить</button>
+          <button type="button" class="btn btn--ghost" id="cancel-btn">Отмена</button>
+          <button type="button" class="btn btn--danger" id="delete-btn" hidden>Удалить</button>
+        </div>
+
+        <p class="error" id="form-error" hidden></p>
+        <p class="success" id="form-success" hidden></p>
+      </form>
+    </section>
+  </main>
+</div>
+
+<!-- Модалка подтверждения удаления -->
+<div class="confirm-modal" id="confirm-modal" hidden>
+  <div class="confirm-modal__backdrop"></div>
+  <div class="confirm-modal__box">
+    <h3>Удалить стихотворение?</h3>
+    <p id="confirm-text">Это действие нельзя отменить.</p>
+    <div class="confirm-modal__actions">
+      <button class="btn btn--ghost" id="confirm-cancel">Отмена</button>
+      <button class="btn btn--danger" id="confirm-ok">Удалить</button>
+    </div>
+  </div>
+</div>
+
+<script src="/redaktor-assets/admin.js"></script>
+</body>
+</html>

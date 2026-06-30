@@ -1,0 +1,36 @@
+## ───────────────────────────────────────────────────────────────
+##  Systemd unit для админки stihi-i-vremya
+##  Положить в: /etc/systemd/system/stihi-admin.service
+##  Активировать:
+##    sudo systemctl daemon-reload
+##    sudo systemctl enable stihi-admin
+##    sudo systemctl start stihi-admin
+##  Логи: journalctl -u stihi-admin -f
+## ───────────────────────────────────────────────────────────────
+
+[Unit]
+Description=Stihi-i-vremya admin backend (Node.js)
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/stihi-i-vremya/server
+ExecStart=/usr/bin/node /var/www/stihi-i-vremya/server/server.js
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+Environment=NODE_ENV=production
+
+# ─── Базовая изоляция (защита на случай взлома) ───
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+# Разрешаем запись только в папку с данными и бэкапами
+ReadWritePaths=/var/www/stihi-i-vremya/data
+
+[Install]
+WantedBy=multi-user.target

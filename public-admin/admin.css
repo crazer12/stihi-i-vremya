@@ -1,0 +1,380 @@
+/* ───────────────────────────────────────────────────────────────
+   Стили админки. Палитра как у сайта, но интерфейс «рабочий».
+   ─────────────────────────────────────────────────────────────── */
+:root {
+  --paper:       #F5EFE3;
+  --paper-warm:  #EFE6D4;
+  --surface:     #FFFFFF;
+  --ink:         #2C2520;
+  --ink-soft:    #5A4F46;
+  --ink-faint:   #8A7E72;
+  --wine:        #7B2D26;
+  --wine-deep:   #5C1F1A;
+  --teal:        #4D6A73;
+  --line:        #D9CDB7;
+  --line-strong: #B8A98D;
+  --danger:      #A33024;
+  --success:     #4A6F3E;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: "Lora", Georgia, serif;
+  font-size: 15px;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+}
+
+button { font: inherit; cursor: pointer; border: 0; background: 0; color: inherit; }
+input, textarea, select { font: inherit; color: inherit; }
+
+/* ───── Общие кнопки ───── */
+.btn {
+  padding: 0.65rem 1.3rem;
+  border-radius: 3px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  white-space: nowrap;
+}
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn--primary {
+  background: var(--wine);
+  color: var(--paper);
+}
+.btn--primary:hover:not(:disabled) { background: var(--wine-deep); }
+.btn--ghost {
+  background: transparent;
+  color: var(--ink-soft);
+  border: 1px solid var(--line-strong);
+}
+.btn--ghost:hover:not(:disabled) {
+  background: var(--paper-warm);
+  color: var(--ink);
+}
+.btn--danger {
+  background: transparent;
+  color: var(--danger);
+  border: 1px solid var(--danger);
+}
+.btn--danger:hover:not(:disabled) {
+  background: var(--danger);
+  color: var(--paper);
+}
+.btn--block { width: 100%; }
+
+/* ───── Поля ввода ───── */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1.2rem;
+}
+.field__label {
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.field__hint {
+  font-size: 0.78rem;
+  color: var(--ink-faint);
+  margin-top: 0.2rem;
+}
+.field input,
+.field textarea,
+.field select,
+.sidebar__toolbar input,
+.sidebar__toolbar select {
+  padding: 0.7rem 0.9rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  font-size: 0.98rem;
+  transition: border-color 0.15s ease;
+  font-family: inherit;
+}
+.field input:focus,
+.field textarea:focus,
+.field select:focus,
+.sidebar__toolbar input:focus,
+.sidebar__toolbar select:focus {
+  outline: none;
+  border-color: var(--wine);
+}
+.field textarea {
+  resize: vertical;
+  min-height: 250px;
+  font-family: "Lora", Georgia, serif;
+  line-height: 1.7;
+}
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+}
+
+/* ───── Сообщения ───── */
+.error, .success {
+  margin-top: 1rem;
+  padding: 0.7rem 1rem;
+  border-radius: 3px;
+  font-size: 0.92rem;
+}
+.error { background: rgba(163, 48, 36, 0.08); color: var(--danger); border-left: 3px solid var(--danger); }
+.success { background: rgba(74, 111, 62, 0.08); color: var(--success); border-left: 3px solid var(--success); }
+
+/* ───── Экраны ───── */
+.screen { min-height: 100vh; display: flex; flex-direction: column; }
+.screen[hidden] { display: none; }
+
+/* ─── Логин ─── */
+#screen-login {
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+.login-card {
+  width: 100%;
+  max-width: 380px;
+  background: var(--surface);
+  padding: 3rem 2.5rem;
+  border: 1px solid var(--line);
+  box-shadow: 0 4px 24px rgba(44, 37, 32, 0.06);
+  position: relative;
+}
+.login-card::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1px solid var(--line);
+  pointer-events: none;
+}
+.login-title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 2.2rem;
+  font-weight: 500;
+  margin: 0 0 0.3rem;
+  text-align: center;
+  color: var(--ink);
+}
+.login-sub {
+  text-align: center;
+  color: var(--ink-faint);
+  font-size: 0.88rem;
+  letter-spacing: 0.1em;
+  margin: 0 0 2rem;
+  text-transform: uppercase;
+}
+.login-card .btn--primary { width: 100%; padding: 0.9rem; }
+
+/* ─── Topbar ─── */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  flex-shrink: 0;
+}
+.topbar__left { display: flex; align-items: baseline; gap: 1.5rem; }
+.topbar__title {
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 500;
+  font-size: 1.5rem;
+  margin: 0;
+}
+.topbar__link {
+  color: var(--wine);
+  text-decoration: none;
+  font-size: 0.88rem;
+}
+.topbar__link:hover { text-decoration: underline; }
+.topbar__right { display: flex; align-items: center; gap: 1rem; }
+.topbar__counter {
+  color: var(--ink-faint);
+  font-size: 0.88rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─── Editor layout ─── */
+.editor {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  min-height: 0;
+  overflow: hidden;
+}
+.sidebar {
+  border-right: 1px solid var(--line);
+  background: var(--paper-warm);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.sidebar__toolbar {
+  padding: 1rem;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  flex-shrink: 0;
+}
+.poem-list {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 0.5rem;
+  min-height: 0;
+}
+
+/* ─── Карточка стиха в списке ─── */
+.poem-item {
+  padding: 0.9rem 1rem;
+  background: var(--surface);
+  border: 1px solid transparent;
+  border-radius: 3px;
+  margin-bottom: 0.4rem;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  display: block;
+  text-align: left;
+  width: 100%;
+}
+.poem-item:hover {
+  border-color: var(--line-strong);
+}
+.poem-item.is-active {
+  border-color: var(--wine);
+  background: var(--paper);
+}
+.poem-item__title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.2;
+  margin-bottom: 0.3rem;
+  display: block;
+  word-break: break-word;
+}
+.poem-item__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.78rem;
+  color: var(--ink-faint);
+}
+.poem-item__category {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--teal);
+}
+.poem-item__date { font-variant-numeric: tabular-nums; }
+.poem-item.no-text .poem-item__title::after {
+  content: " · нет текста";
+  color: var(--ink-faint);
+  font-style: italic;
+  font-size: 0.85em;
+}
+
+.empty-state {
+  padding: 2rem 1rem;
+  color: var(--ink-faint);
+  font-style: italic;
+  text-align: center;
+}
+.empty-state--big {
+  padding: 5rem 2rem;
+  font-size: 1.1rem;
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+}
+
+/* ─── Форма редактирования ─── */
+.form-area {
+  overflow-y: auto;
+  padding: 2rem 2.5rem;
+  min-height: 0;
+}
+.poem-form { max-width: 720px; }
+.form-actions {
+  display: flex;
+  gap: 0.7rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+.form-actions .btn--danger { margin-left: auto; }
+
+/* ─── Модалка подтверждения ─── */
+.confirm-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.confirm-modal[hidden] { display: none; }
+.confirm-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(28, 24, 20, 0.5);
+}
+.confirm-modal__box {
+  position: relative;
+  background: var(--surface);
+  padding: 2rem;
+  max-width: 420px;
+  width: 100%;
+  border: 1px solid var(--line);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+}
+.confirm-modal__box h3 {
+  margin: 0 0 0.5rem;
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 500;
+  font-size: 1.5rem;
+}
+.confirm-modal__box p {
+  color: var(--ink-soft);
+  margin: 0 0 1.5rem;
+}
+.confirm-modal__actions {
+  display: flex;
+  gap: 0.7rem;
+  justify-content: flex-end;
+}
+
+/* ───── Адаптив ───── */
+@media (max-width: 860px) {
+  .editor {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    max-height: 40vh;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .form-area { padding: 1.5rem 1.25rem; }
+  .field-row { grid-template-columns: 1fr; gap: 0; }
+  .topbar { padding: 0.8rem 1rem; flex-wrap: wrap; gap: 0.7rem; }
+  .topbar__left { gap: 1rem; }
+  .topbar__title { font-size: 1.2rem; }
+}
+
+@media (max-width: 480px) {
+  .form-actions { flex-direction: column; }
+  .form-actions .btn { width: 100%; }
+  .form-actions .btn--danger { margin-left: 0; margin-top: 0.5rem; }
+  .login-card { padding: 2rem 1.25rem; }
+}
