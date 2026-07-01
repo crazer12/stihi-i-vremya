@@ -37,6 +37,7 @@
     </div>
     <div class="topbar__right">
       <span class="topbar__counter" id="poem-counter">—</span>
+      <button class="btn btn--ghost" id="categories-btn">Категории</button>
       <button class="btn btn--ghost" id="logout-btn">Выйти</button>
     </div>
   </header>
@@ -114,6 +115,31 @@
     <div class="confirm-modal__actions">
       <button class="btn btn--ghost" id="confirm-cancel">Отмена</button>
       <button class="btn btn--danger" id="confirm-ok">Удалить</button>
+    </div>
+  </div>
+</div>
+
+<!-- Модалка управления категориями -->
+<div class="confirm-modal" id="categories-modal" hidden>
+  <div class="confirm-modal__backdrop" data-cat-close></div>
+  <div class="confirm-modal__box confirm-modal__box--wide">
+    <h3>Категории</h3>
+    <p>Добавляйте новые разделы или переименуйте существующие. Категорию с уже добавленными стихами удалить нельзя — сначала перенесите стихи в другую категорию.</p>
+
+    <div class="cat-list" id="cat-list">
+      <!-- Заполняется скриптом -->
+    </div>
+
+    <div class="cat-add">
+      <input type="text" id="cat-new-name" placeholder="Название, например «Иронические стихи»" maxlength="100" />
+      <button type="button" class="btn btn--primary" id="cat-add-btn">Добавить</button>
+    </div>
+
+    <p class="error" id="cat-error" hidden></p>
+    <p class="success" id="cat-success" hidden></p>
+
+    <div class="confirm-modal__actions">
+      <button class="btn btn--ghost" id="cat-close-btn">Закрыть</button>
     </div>
   </div>
 </div>

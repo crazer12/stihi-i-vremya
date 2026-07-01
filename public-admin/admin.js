@@ -36,6 +36,13 @@
   const charCounter  = $('char-counter');
   const confirmModal = $('confirm-modal');
   const confirmText  = $('confirm-text');
+  const categoriesBtn = $('categories-btn');
+  const categoriesModal = $('categories-modal');
+  const catList      = $('cat-list');
+  const catNewName   = $('cat-new-name');
+  const catAddBtn    = $('cat-add-btn');
+  const catError     = $('cat-error');
+  const catSuccess   = $('cat-success');
 
   // ─── API helper ───
   async function api(path, options = {}) {
@@ -354,6 +361,182 @@
       e.preventDefault();
       e.returnValue = '';
     }
+  });
+
+  // ─────────────────────────────────────────────────────────────
+  // УПРАВЛЕНИЕ КАТЕГОРИЯМИ
+  // ─────────────────────────────────────────────────────────────
+
+  // Транслитерация для автогенерации ключа новой категории (civic, love, и т.д.)
+  const TRANSLIT_MAP = {
+    а:'a',б:'b',в:'v',г:'g',д:'d',е:'e',ё:'e',ж:'zh',з:'z',и:'i',й:'y',
+    к:'k',л:'l',м:'m',н:'n',о:'o',п:'p',р:'r',с:'s',т:'t',у:'u',ф:'f',
+    х:'h',ц:'c',ч:'ch',ш:'sh',щ:'sch',ъ:'',ы:'y',ь:'',э:'e',ю:'yu',я:'ya'
+  };
+  function makeCategoryKey(name) {
+    const base = name.toLowerCase().split('').map(ch => TRANSLIT_MAP[ch] ?? ch).join('')
+      .replace(/[^a-z0-9]+/g, '_')
+      .replace(/^_+|_+$/g, '')
+      .slice(0, 30) || 'category';
+    // Гарантируем уникальность ключа
+    let key = base, i = 2;
+    while (state.categories[key]) { key = `${base}_${i}`; i++; }
+    return key;
+  }
+
+  function poemCountInCategory(key) {
+    return state.poems.filter(p => p.category === key).length;
+  }
+
+  function renderCategoriesModal() {
+    catList.innerHTML = '';
+    const entries = Object.entries(state.categories);
+    if (entries.length === 0) {
+      catList.innerHTML = '<p class="empty-state">Категорий пока нет.</p>';
+      return;
+    }
+    for (const [key, info] of entries) {
+      const count = poemCountInCategory(key);
+      const row = document.createElement('div');
+      row.className = 'cat-row';
+      row.innerHTML = `
+        <input type="text" value="${escapeAttr(info.name || key)}" data-key="${escapeAttr(key)}" maxlength="100" />
+        <span class="cat-row__count">${count} стих${plural(count, '', 'а', 'ов')}</span>
+        <button type="button" class="cat-row__delete" title="${count > 0 ? 'Нельзя удалить: есть стихи' : 'Удалить категорию'}" ${count > 0 ? 'disabled' : ''} data-key="${escapeAttr(key)}">✕</button>
+      `;
+      catList.appendChild(row);
+    }
+
+    // Переименование по blur (когда убрали фокус с поля)
+    catList.querySelectorAll('input[type="text"]').forEach(input => {
+      const originalValue = input.value;
+      input.addEventListener('blur', async () => {
+        const newName = input.value.trim();
+        if (!newName || newName === originalValue) {
+          input.value = originalValue || newName;
+          return;
+        }
+        await renameCategory(input.dataset.key, newName);
+      });
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+      });
+    });
+
+    // Удаление
+    catList.querySelectorAll('.cat-row__delete').forEach(btn => {
+      btn.addEventListener('click', () => deleteCategory(btn.dataset.key));
+    });
+  }
+
+  function escapeAttr(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+  }
+
+  function clearCatMessages() {
+    catError.hidden = true;
+    catSuccess.hidden = true;
+  }
+
+  async function saveCategoriesToServer() {
+    await api('/api/categories', { method: 'PUT', body: state.categories });
+  }
+
+  async function renameCategory(key, newName) {
+    clearCatMessages();
+    const prevName = state.categories[key].name;
+    state.categories[key] = {
+      ...state.categories[key],
+      name: newName,
+      short: newName.length > 20 ? newName.slice(0, 20) : newName
+    };
+    try {
+      await saveCategoriesToServer();
+      catSuccess.textContent = `Категория переименована в «${newName}»`;
+      catSuccess.hidden = false;
+      fillCategorySelects();
+      buildFilters();
+      renderPoemList();
+    } catch (e) {
+      state.categories[key].name = prevName; // откат при ошибке
+      catError.textContent = e.message;
+      catError.hidden = false;
+      renderCategoriesModal();
+    }
+  }
+
+  async function addCategory() {
+    clearCatMessages();
+    const name = catNewName.value.trim();
+    if (!name) {
+      catError.textContent = 'Введите название категории';
+      catError.hidden = false;
+      return;
+    }
+    if (name.length > 100) {
+      catError.textContent = 'Слишком длинное название';
+      catError.hidden = false;
+      return;
+    }
+    const key = makeCategoryKey(name);
+    state.categories[key] = { name, short: name.length > 20 ? name.slice(0, 20) : name };
+    catAddBtn.disabled = true;
+    try {
+      await saveCategoriesToServer();
+      catNewName.value = '';
+      catSuccess.textContent = `Категория «${name}» добавлена`;
+      catSuccess.hidden = false;
+      fillCategorySelects();
+      buildFilters();
+      renderCategoriesModal();
+    } catch (e) {
+      delete state.categories[key]; // откат при ошибке
+      catError.textContent = e.message;
+      catError.hidden = false;
+    } finally {
+      catAddBtn.disabled = false;
+    }
+  }
+
+  async function deleteCategory(key) {
+    clearCatMessages();
+    if (poemCountInCategory(key) > 0) return; // защита на всякий случай, кнопка и так disabled
+    const info = state.categories[key];
+    if (!confirm(`Удалить категорию «${info.name}»? Стихов в ней нет, действие безопасно.`)) return;
+
+    const backup = state.categories[key];
+    delete state.categories[key];
+    try {
+      await saveCategoriesToServer();
+      fillCategorySelects();
+      buildFilters();
+      renderCategoriesModal();
+    } catch (e) {
+      state.categories[key] = backup; // откат
+      catError.textContent = e.message;
+      catError.hidden = false;
+      renderCategoriesModal();
+    }
+  }
+
+  function openCategoriesModal() {
+    clearCatMessages();
+    catNewName.value = '';
+    renderCategoriesModal();
+    categoriesModal.hidden = false;
+  }
+  function closeCategoriesModal() {
+    categoriesModal.hidden = true;
+  }
+
+  categoriesBtn.addEventListener('click', openCategoriesModal);
+  $('cat-close-btn').addEventListener('click', closeCategoriesModal);
+  categoriesModal.querySelectorAll('[data-cat-close]').forEach(el =>
+    el.addEventListener('click', closeCategoriesModal)
+  );
+  catAddBtn.addEventListener('click', addCategory);
+  catNewName.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); addCategory(); }
   });
 
   // ─── Старт ───
